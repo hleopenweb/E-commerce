@@ -40,8 +40,8 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = style == CustomButtonStyle.filled
-        ? Color(0x0ff371b8)
-        : Colors.transparent;
+        ? Colors.blue.withOpacity(0.2)
+        : Colors.blue.withOpacity(0.2);
     final disabledColor = style == CustomButtonStyle.filled
         ? color.withAlpha(120)
         : Colors.transparent;
@@ -58,7 +58,7 @@ class CustomButton extends StatelessWidget {
           : null,
       child: CupertinoButton(
         minSize: minWidth,
-        color: color,
+        color: Colors.blue,
         disabledColor: disabledColor,
         onPressed: onPressed != null
             ? () {

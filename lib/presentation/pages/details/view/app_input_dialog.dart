@@ -4,12 +4,12 @@ import 'dart:math';
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 // Package imports:
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:sajilo_dokan/presentation/pages/details/view/svg_icon.dart';
 
 import 'circle_icon.dart';
 import 'custom_button.dart';
@@ -50,7 +50,7 @@ class AppInputDialog extends StatefulWidget {
   final ValueChanged<String?>? onChange;
   final bool Function(String text)? submitButtonValidator;
   final String submitButtonTitle;
-  final ValueChanged<String> onSubmit;
+  final Function(String text,double rating)? onSubmit;
   final String? cancelButtonTitle;
   final ValueChanged<String>? onCancel;
   final VoidCallback? onClose;
@@ -65,7 +65,7 @@ class AppInputDialog extends StatefulWidget {
     ValueChanged<String?>? onChange,
     bool Function(String text)? confirmButtonValidator,
     required String submitButtonTitle,
-    required ValueChanged<String> onSubmit,
+    required  Function(String text,double rating)? onSubmit,
     String? cancelButtonTitle,
     ValueChanged<String>? onCancel,
     VoidCallback? onClose,
@@ -130,6 +130,9 @@ class _AppInputDialogState extends State<AppInputDialog> {
   static const double _inputFieldHeight = 130;
   static const double _dialogPadding = 16;
 
+  int index = 0;
+  double rating = 0;
+
   final ValueNotifier<bool> _isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _submitButtonEnabled = ValueNotifier<bool>(true);
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -159,20 +162,20 @@ class _AppInputDialogState extends State<AppInputDialog> {
                 const Spacer(),
                 CircleIcon(
                   padding: EdgeInsets.zero,
-                  icon: const SvgIcon(
-                    icon: 'assets/icon_delete.svg',
+                  icon: IconButton(
+                    iconSize: 32,
+                    padding: EdgeInsets.zero,
+                    icon: Icon(Icons.cancel),
                     color: Colors.black,
-                    size: 18,
+                    onPressed: () {
+                      widget.onClose?.call();
+                      Get.back();
+                    },
                   ),
-                  backgroundColor: Colors.black,
-                  onPressed: () {
-                    widget.onClose?.call();
-                    Get.back();
-                  },
                 ),
               ],
             ),
-            const SizedBox(height: _dialogPadding),
+            const SizedBox(height: _dialogPadding / 2),
             Container(
               padding: const EdgeInsets.all(_dialogPadding),
               decoration: BoxDecoration(
@@ -192,14 +195,90 @@ class _AppInputDialogState extends State<AppInputDialog> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: _dialogPadding),
+                  const SizedBox(height: _dialogPadding / 2),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RatingBar.builder(
+                        itemSize: 32,
+                        allowHalfRating: true,
+                        initialRating: 3,
+                        itemBuilder: (context, index) {
+                          switch (index) {
+                            case 0:
+                              return Icon(
+                                Icons.sentiment_very_dissatisfied,
+                                color: Colors.red,
+                              );
+                            case 1:
+                              return Icon(
+                                Icons.sentiment_dissatisfied,
+                                color: Colors.redAccent,
+                              );
+                            case 2:
+                              return Icon(
+                                Icons.sentiment_neutral,
+                                color: Colors.amber,
+                              );
+                            case 3:
+                              return Icon(
+                                Icons.sentiment_satisfied,
+                                color: Colors.lightGreen,
+                              );
+                            case 4:
+                              return Icon(
+                                Icons.sentiment_very_satisfied,
+                                color: Colors.green,
+                              );
+                            default:
+                              return Icon(
+                                Icons.sentiment_very_dissatisfied,
+                                color: Colors.red,
+                              );
+                          }
+                        },
+                        onRatingUpdate: (rating) {
+                          setState(() {
+                            this.rating = rating;
+                          });
+                        },
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '$rating',
+                              style: GoogleFonts.beVietnam(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: getColor(rating),
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' /5',
+                              style: GoogleFonts.beVietnam(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: _dialogPadding / 2),
 
                   // Subtitle label
                   if (widget.subTitle != null &&
                       widget.subTitle!.isNotEmpty) ...[
                     Text(
                       widget.subTitle!,
-                      style: GoogleFonts.beVietnam(color: Color(0x0ffa8a8a)),
+                      style: GoogleFonts.beVietnam(
+                        color: Colors.black.withOpacity(0.5),
+                        fontSize: 14,
+                      ),
                       maxLines: 2,
                     ),
                     const SizedBox(height: _dialogPadding),
@@ -239,6 +318,23 @@ class _AppInputDialogState extends State<AppInputDialog> {
     );
   }
 
+  Color getColor(double rating) {
+    switch (rating.toInt()) {
+      case 1:
+        return Colors.red;
+      case 2:
+        return Colors.redAccent;
+      case 3:
+        return Colors.amber;
+      case 4:
+        return Colors.lightGreen;
+      case 5:
+        return Colors.green;
+      default:
+        return Colors.red;
+    }
+  }
+
   Widget _buildButtons() {
     final List<Widget> buttons = [];
 
@@ -261,10 +357,11 @@ class _AppInputDialogState extends State<AppInputDialog> {
     final submitButton = CustomButton(
       isLoading: _isLoading.value,
       minWidth: 130,
+      fontWeight: FontWeight.w700,
       title: widget.submitButtonTitle,
       onPressed: _submitButtonEnabled.value
           ? () {
-              widget.onSubmit(_controller.text);
+              widget.onSubmit!(_controller.text,rating);
             }
           : null,
     );
@@ -284,7 +381,6 @@ class _AppInputDialogState extends State<AppInputDialog> {
       child: TextFormField(
         readOnly: _isLoading.value,
         enableInteractiveSelection: !_isLoading.value,
-        maxLength: widget.maxLength,
         maxLengthEnforcement: MaxLengthEnforcement.enforced,
         controller: _controller,
         keyboardType: TextInputType.multiline,
@@ -302,7 +398,6 @@ class _AppInputDialogState extends State<AppInputDialog> {
         },
         style: GoogleFonts.beVietnam(
           fontSize: 15,
-          color: Color(0xff222d398),
           fontWeight: FontWeight.w400,
         ),
         cursorColor: Color(0xff222d39),
@@ -319,7 +414,7 @@ class _AppInputDialogState extends State<AppInputDialog> {
           hintText: widget.placeHolder,
           hintStyle: GoogleFonts.beVietnam(
             fontSize: 15,
-            color: Color(0x0ffa8a8a),
+            color: Colors.black.withOpacity(0.4),
           ),
           contentPadding: const EdgeInsets.all(10),
           // counter: Container(),

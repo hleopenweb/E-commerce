@@ -278,8 +278,8 @@ class ProductDetailsController extends GetxController
   // Improvement/Suggestion 4.4 -> Running AddTOCartAnimation BEFORE runCArtAnimation
   Future<void> listClick(GlobalKey gkImageContainer) async {
     if (count.value > 0) {
-      await Get.find<CartController>().addToCart(
-          args.id, count.value, args.price!.toInt());
+      await Get.find<CartController>()
+          .addToCart(args.id, count.value, args.price!.toInt());
       await runAddToCardAnimation(gkImageContainer);
       await gkCart.currentState!.runCartAnimation(
           (Get.find<CartController>().contentCartList.length).toString());
@@ -303,12 +303,12 @@ class ProductDetailsController extends GetxController
   void onFeedback() {
     AppInputDialog.showInputDialog(
       controller: _inputController,
-      subTitle:
-      'test',
-      title:'test',
-      placeHolder: 'test',
-      submitButtonTitle: 'test',
-      onSubmit: (text) async {
+      subTitle: 'Vui lòng để lại đánh giá',
+      title: 'Đánh giá sản phẩm',
+      submitButtonTitle: 'Đánh giá',
+      placeHolder: '',
+      onSubmit: (text, rating) async {
+        print(text+rating.toString());
       },
       confirmButtonValidator: (text) => text.isNotEmpty,
       maxLength: 255,
