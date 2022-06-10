@@ -22,7 +22,10 @@ abstract class ApiRepositoryInterface {
   Future<Product?> getCategoryProduct(int? idCategory, int? page, String? sort,
       String? productName, int? categoryId);
 
-  Future<Content?> getProductDetail(int id) ;
+  Future<Product?> getRecommendProduct(
+      int? limit, int? page, String? sort, int? id);
+
+  Future<Content?> getProductDetail(int id);
 
   Future<CommentResponse?> getCommentProduct(
       int? idCategory, int? page, String? sort, int? productId);

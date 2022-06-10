@@ -32,57 +32,59 @@ class Home extends StatelessWidget {
               BlockHeader(
                 title: 'Được đề xuất cho bạn',
                 linkText: 'Xem tất cả',
-                onLinkTap: () {
-                  // final list = controller.productList
-                  //     .where((i) => i.price! <= 5000)
-                  //     .toList();
-                  // navigator!.pushNamed(SajiloDokanRoutes.categoryProduct,
-                  //     arguments: CategoryArguments(
-                  //         product: list, categoryName: 'Popular Product'));
-                },
-              ),
-              // Obx(() {
-              //   final list = controller.productList
-              //       .where((i) => i.price! <= 5000)
-              //       .toList();
-              //   return PopularProduct(
-              //     products: controller.isLoading.value ? list : null,
-              //   );
-              // }),
-              BlockHeader(
-                title: 'Tất cả sản phẩm',
-                linkText: '',
-                onLinkTap: () {
-
-                },
               ),
               Obx(() {
                 if (!controller.isLoadingProduct.value) {
-                     return
-                       Column(
-                         children: [
-                           ProductGridviewTile(
-                              productList:
-                              controller.categoryProducts,
-                            ),
-                           if (controller.isLoadMoreProduct.value)
-                             ...List.generate(
-                               2,
-                                   (index) => ShimmerItem(
-                                 isGrid: true,
-                               ),
-                             )
-                         ],
-                       );
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0),
+                      child: Row(
+                        children: controller.categoryProducts
+                            .map(
+                              (element) => ProductTile(
+                            product: element,
+                          ),
+                        )
+                            .toList(),
+                      ),
+                    ),
+                  );
                 } else {
+                  return Center(child: LoadingWidget());
+                }
+              }),
+              BlockHeader(
+                title: 'Tất cả sản phẩm',
+                linkText: '',
+                onLinkTap: () {},
+              ),
+              Obx(() {
+                if (!controller.isLoadingProduct.value) {
                   return Column(
                     children: [
+                      ProductGridviewTile(
+                        productList: controller.categoryProducts,
+                      ),
+                      if (controller.isLoadMoreProduct.value)
                         ...List.generate(
                           2,
-                              (index) => ShimmerItem(
+                          (index) => ShimmerItem(
                             isGrid: true,
                           ),
                         )
+                    ],
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      ...List.generate(
+                        2,
+                        (index) => ShimmerItem(
+                          isGrid: true,
+                        ),
+                      )
                     ],
                   );
                 }

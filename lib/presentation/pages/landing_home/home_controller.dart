@@ -26,6 +26,7 @@ class HomeController extends GetxController {
   final search = ''.obs;
   late ScrollController scrollController;
   RxBool isLoadingProduct = false.obs;
+  RxBool isLoadingProductRecommend = false.obs;
   RxBool isLoadMoreProduct = false.obs;
   RxBool isLoading = true.obs;
   final TextEditingController textEditingController  = TextEditingController();

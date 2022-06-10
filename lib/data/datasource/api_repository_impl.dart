@@ -156,8 +156,36 @@ class ApiRepositoryImpl extends ApiRepositoryInterface with BaseData {
   }
 
   @override
+  Future<Product?> getRecommendProduct(
+      int? limit, int? page, String? sort, int? id) async {
+    setValueOfQuery(
+      limit: limit,
+      page: page,
+      sort: sort,
+    );
+    final result = await client.get(
+      getMainTestUrl(endpoint: '/api/products/recommendSystem/$id'),
+      headers: headerWithoutAuth,
+    );
+    final jsonData = result.bodyBytes;
+    print('Recommend system product call');
+    if (result.statusCode == 200) {
+      return Product.fromRawJson(utf8.decode(jsonData));
+    } else if (result.statusCode == 401) {
+      if (await getNewAccessToken()) {
+        getRecommendProduct(limit, page, sort, id);
+      } else {
+        logOut();
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
   Future<Content?> getProductDetail(int id) async {
-    final result = await client.get(getMainTestUrl(endpoint: '/api/products/$id'),
+    final result = await client.get(
+        getMainTestUrl(endpoint: '/api/products/$id'),
         headers: headerWithoutAuth);
     final jsonData = result.bodyBytes;
     print('Product detail call');
