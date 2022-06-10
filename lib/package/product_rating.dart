@@ -56,6 +56,12 @@ class _ProductRatingState extends State<ProductRating> {
   }
 
   @override
+  void didUpdateWidget(covariant ProductRating oldWidget) {
+    currentRating = widget.rating;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
     debounceTimer?.cancel();
     debounceTimer = null;

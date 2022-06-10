@@ -22,7 +22,7 @@ class ProductTile extends StatelessWidget {
     return product != null
         ? InkWell(
             onTap: () {
-              Get.toNamed(Routes.productDetails, arguments: product);
+              Get.toNamed(Routes.productDetails, arguments: product?.id);
             },
             child: SizedBox(
               width: 150,

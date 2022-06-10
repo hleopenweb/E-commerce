@@ -3,6 +3,7 @@ import 'package:sajilo_dokan/domain/request/add_cart_request.dart';
 import 'package:sajilo_dokan/domain/request/add_order_request.dart';
 import 'package:sajilo_dokan/domain/request/cancel_order_request.dart';
 import 'package:sajilo_dokan/domain/request/comment_request.dart';
+import 'package:sajilo_dokan/domain/request/feedback_request.dart';
 import 'package:sajilo_dokan/domain/response/add_cart_response.dart';
 import 'package:sajilo_dokan/domain/response/cart_response.dart';
 import 'package:sajilo_dokan/domain/response/category.dart';
@@ -20,6 +21,8 @@ abstract class ApiRepositoryInterface {
 
   Future<Product?> getCategoryProduct(int? idCategory, int? page, String? sort,
       String? productName, int? categoryId);
+
+  Future<Content?> getProductDetail(int id) ;
 
   Future<CommentResponse?> getCommentProduct(
       int? idCategory, int? page, String? sort, int? productId);
@@ -41,6 +44,8 @@ abstract class ApiRepositoryInterface {
   Future<PostCommentResponse?> createComment(CommentRequest commentRequest);
 
   Future<UpdateCartResponse?> updateCart(AddCartRequest addCartRequest, int id);
+
+  Future<UpdateCartResponse?> feedback(FeedbackRequest feedbackRequest);
 
   Future<UpdateCartResponse?> cancelOrder(
       CancelOrderRequest cancelOrderRequest, int id);

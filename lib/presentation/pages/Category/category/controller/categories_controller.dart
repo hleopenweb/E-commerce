@@ -16,7 +16,7 @@ class CategoryController extends GetxController {
 
   RxList<Category> categoriesList = RxList();
   RxBool isLoadingCategory = false.obs;
-  RxList<Product> categoryProducts = RxList();
+  RxList<Product>categoryProducts = RxList();
 
   @override
   Future<void> onReady() async {

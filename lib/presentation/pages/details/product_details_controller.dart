@@ -1,12 +1,15 @@
 import 'package:add_to_cart_animation/add_to_cart_icon.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:sajilo_dokan/domain/model/user_model.dart';
 import 'package:sajilo_dokan/domain/repository/local_repository.dart';
 import 'package:sajilo_dokan/domain/repository/product_repository/api_repository.dart';
 import 'package:sajilo_dokan/domain/repository/user/user_repository.dart';
 import 'package:sajilo_dokan/domain/request/comment_request.dart';
+import 'package:sajilo_dokan/domain/request/feedback_request.dart';
 import 'package:sajilo_dokan/domain/response/comment_response.dart';
 import 'package:sajilo_dokan/domain/response/product.dart';
 import 'package:sajilo_dokan/presentation/pages/cart/cart_controller.dart';
@@ -39,8 +42,9 @@ class ProductDetailsController extends GetxController
   RxBool isCommentsLoad = false.obs;
   final RxList<Comments> commentContent = RxList();
   final RxList<String> listUserComments = RxList();
-  late final TextEditingController textEditingController;
-  late Content args;
+  final TextEditingController textEditingController = TextEditingController();
+  final content = Content().obs;
+  late int args;
   final sort = 'ASC'.obs;
   final page = 0.obs;
   final _inputController = AppInputDialogController();
@@ -58,6 +62,7 @@ class ProductDetailsController extends GetxController
   RxBool isLoading = true.obs;
   final RxList<Content> categoryProducts = RxList();
   RxBool isLoadingProduct = false.obs;
+  RxBool isLoadingContent = false.obs;
 
   // We can detech the location of the card by this  GlobalKey<CartIconKey>
   GlobalKey<CartIconKey> gkCart = GlobalKey<CartIconKey>();
@@ -66,38 +71,29 @@ class ProductDetailsController extends GetxController
 
   @override
   Future<void> onInit() async {
+    if (Get.arguments != null) {
+      args = Get.arguments as int;
+      await fetchContent(id: args);
+    }
     //Initialize Animation Controller
-    textEditingController = TextEditingController();
     animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     colorAnimation = ColorTween(begin: Colors.grey[400], end: Colors.red)
         .animate(animationController);
     animationController.forward();
     animationController.addListener(() => print(animationController.value));
-    if (Get.arguments != null) {
-      args = Get.arguments as Content;
-    }
     controllerState = PhotoViewScaleStateController();
     await getComments(
       page: page.value,
       limit: 3,
       sort: 'id,$sort',
-      productId: args.id,
+      productId: content.value.id,
     );
     await fetchProduct();
     await gkCart.currentState!.runCartAnimation(
         (Get.find<CartController>().contentCartList.length).toString());
 
     super.onInit();
-  }
-
-  Future<void> fetchProduct() async {
-    categoryProducts.clear();
-    await loadCategoryProducts(
-      page: 0,
-      limit: 10,
-      sort: 'price,ASC',
-    );
   }
 
   Future<void> loadCategoryProducts({
@@ -120,7 +116,7 @@ class ProductDetailsController extends GetxController
       if (product.value.content!.isNotEmpty) {
         product.value.content?.forEach((element) {
           categoryProducts.addIf(
-              element.categoryId == args.categoryId, element);
+              element.categoryId == content.value.categoryId, element);
         });
       }
     } catch (e) {
@@ -129,6 +125,140 @@ class ProductDetailsController extends GetxController
     } finally {
       isLoadingProduct(false);
     }
+  }
+
+  Future<void> fetchContent({
+    int? id,
+  }) async {
+    isLoadingContent(true);
+    try {
+      isLoadingContent(true);
+      content.value =
+          (await apiRepositoryInterface.getProductDetail(id!)) ?? Content();
+    } catch (e) {
+      isLoadingContent(false);
+      rethrow;
+    } finally {
+      isLoadingContent(false);
+    }
+  }
+
+  Future<void> fetchProduct() async {
+    categoryProducts.clear();
+    await loadCategoryProducts(
+      page: 0,
+      limit: 10,
+      sort: 'price,ASC',
+    );
+  }
+
+  Future<void> feedback(
+      Content item, double rating, BuildContext context) async {
+    final res = await apiRepositoryInterface.feedback(
+      FeedbackRequest(
+        customerId: UserModel().id!,
+        rating: rating,
+        productId: item.id!,
+      ),
+    );
+    if (res != null) {
+      _handleSuccess(context);
+    }
+    else{
+      _handleFailed(context);
+    }
+  }
+
+  Future<void> _handleFailed(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            'Đánh giá thất bại',
+            style: GoogleFonts.beVietnam(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: Text(
+            'Vui lòng mua sản phẩm để đánh giá',
+            style: GoogleFonts.beVietnam(
+              fontSize: 14,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                'Hủy',
+                style: GoogleFonts.beVietnam(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+               Get.back();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text('OK'),
+              onPressed: () async {
+                Get.back();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _handleSuccess(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            'Bạn đã đánh giá thành công',
+            style: GoogleFonts.beVietnam(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: Text(
+            'Cảm ơn vi đã dành thời gian để chúng tôi hoàn thiện sản phẩm',
+            style: GoogleFonts.beVietnam(
+              fontSize: 14,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                'Hủy',
+                style: GoogleFonts.beVietnam(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () async {
+                Get.back();
+                await fetchContent(id: args);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text('OK'),
+              onPressed: () async {
+                Get.back();
+                await fetchContent(id: args);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -197,6 +327,8 @@ class ProductDetailsController extends GetxController
     String? sort,
     int? productId,
   }) async {
+    commentContent.clear();
+    listUserComments.clear();
     try {
       isCommentsLoad(true);
       comments.value = (await apiRepositoryInterface.getCommentProduct(
@@ -206,12 +338,14 @@ class ProductDetailsController extends GetxController
             productId,
           )) ??
           CommentResponse();
-      if (comments.value.content!.isNotEmpty) {
+      if (comments.value.content!= null && comments.value.content!.isNotEmpty) {
         commentContent.addAll(comments.value.content!);
+        for (final comment in commentContent) {
+            final user = await getUserInfo(comment.customerId ?? 1);
+            listUserComments.add(user);
+        }
       }
-      for (final comment in commentContent) {
-        listUserComments.add(await getUserInfo(comment.customerId!));
-      }
+
       print(commentContent.length);
     } catch (e) {
       isCommentsLoad(false);
@@ -228,7 +362,9 @@ class ProductDetailsController extends GetxController
       isCommentsLoad(true);
       await apiRepositoryInterface.createComment(
         CommentRequest(
-            comment: comment, productId: args.id, customerId: UserModel().id),
+            comment: comment,
+            productId: content.value.id,
+            customerId: UserModel().id),
       );
       page.value = 0;
       listUserComments.clear();
@@ -237,7 +373,7 @@ class ProductDetailsController extends GetxController
         page: page.value,
         limit: 3,
         sort: 'id,$sort',
-        productId: args.id,
+        productId: content.value.id,
       );
       isCommentsLoad(false);
     } on Exception {
@@ -275,11 +411,11 @@ class ProductDetailsController extends GetxController
     }
   }
 
-  // Improvement/Suggestion 4.4 -> Running AddTOCartAnimation BEFORE runCArtAnimation
+// Improvement/Suggestion 4.4 -> Running AddTOCartAnimation BEFORE runCArtAnimation
   Future<void> listClick(GlobalKey gkImageContainer) async {
     if (count.value > 0) {
-      await Get.find<CartController>()
-          .addToCart(args.id, count.value, args.price!.toInt());
+      await Get.find<CartController>().addToCart(
+          content.value.id, count.value, content.value.price!.toInt());
       await runAddToCardAnimation(gkImageContainer);
       await gkCart.currentState!.runCartAnimation(
           (Get.find<CartController>().contentCartList.length).toString());
@@ -300,18 +436,18 @@ class ProductDetailsController extends GetxController
     }
   }
 
-  void onFeedback() {
+  void onFeedback(BuildContext context) {
     AppInputDialog.showInputDialog(
       controller: _inputController,
-      subTitle: 'Vui lòng để lại đánh giá',
+      subTitle: 'Để lại đánh giá để chúng tôi ngày càng hoàn thiện',
       title: 'Đánh giá sản phẩm',
       submitButtonTitle: 'Đánh giá',
       placeHolder: '',
-      onSubmit: (text, rating) async {
-        print(text+rating.toString());
+      onSubmit: (rating) async {
+        await feedback(content.value, rating, context);
       },
-      confirmButtonValidator: (text) => text.isNotEmpty,
       maxLength: 255,
     );
   }
+
 }

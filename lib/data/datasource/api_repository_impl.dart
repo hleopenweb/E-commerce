@@ -10,6 +10,7 @@ import 'package:sajilo_dokan/domain/request/add_order_request.dart';
 import 'package:sajilo_dokan/domain/request/cancel_order_request.dart';
 import 'package:sajilo_dokan/domain/request/cart_request.dart';
 import 'package:sajilo_dokan/domain/request/comment_request.dart';
+import 'package:sajilo_dokan/domain/request/feedback_request.dart';
 import 'package:sajilo_dokan/domain/response/add_cart_response.dart';
 import 'package:sajilo_dokan/domain/response/cart_response.dart';
 import 'package:sajilo_dokan/domain/response/category.dart';
@@ -146,6 +147,25 @@ class ApiRepositoryImpl extends ApiRepositoryInterface with BaseData {
     } else if (result.statusCode == 401) {
       if (await getNewAccessToken()) {
         getCategoryProduct(limit, page, sort, productName, categoryId);
+      } else {
+        logOut();
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<Content?> getProductDetail(int id) async {
+    final result = await client.get(getMainTestUrl(endpoint: '/api/products/$id'),
+        headers: headerWithoutAuth);
+    final jsonData = result.bodyBytes;
+    print('Product detail call');
+    if (result.statusCode == 200) {
+      return Content.fromRawJson(utf8.decode(jsonData));
+    } else if (result.statusCode == 401) {
+      if (await getNewAccessToken()) {
+        getProductDetail(id);
       } else {
         logOut();
       }
@@ -323,6 +343,31 @@ class ApiRepositoryImpl extends ApiRepositoryInterface with BaseData {
     } else if (result.statusCode == 401) {
       if (await getNewAccessToken()) {
         await updateCart(addCartRequest, id);
+      } else {
+        logOut();
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<UpdateCartResponse?> feedback(FeedbackRequest feedbackRequest) async {
+    final result = await client.post(
+      getMainTestUrl(endpoint: '/api/feedbacks', isQuery: false),
+      headers: headerWithoutAuth,
+      body: jsonEncode({
+        'customerId': feedbackRequest.customerId,
+        'rating': feedbackRequest.rating,
+        'productId': feedbackRequest.productId,
+      }),
+    );
+    if (result.statusCode == 200) {
+      final jsonData = result.body;
+      print('feedback success');
+      return UpdateCartResponse.fromRawJson(jsonData);
+    } else if (result.statusCode == 401) {
+      if (await getNewAccessToken()) {
+        await feedback(feedbackRequest);
       } else {
         logOut();
       }

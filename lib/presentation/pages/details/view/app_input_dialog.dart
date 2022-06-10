@@ -47,10 +47,8 @@ class AppInputDialog extends StatefulWidget {
   final String? placeHolder;
   final String? content;
   final int? maxLength;
-  final ValueChanged<String?>? onChange;
-  final bool Function(String text)? submitButtonValidator;
   final String submitButtonTitle;
-  final Function(String text,double rating)? onSubmit;
+  final Function(double rating)? onSubmit;
   final String? cancelButtonTitle;
   final ValueChanged<String>? onCancel;
   final VoidCallback? onClose;
@@ -63,9 +61,9 @@ class AppInputDialog extends StatefulWidget {
     String? content,
     int? maxLength,
     ValueChanged<String?>? onChange,
-    bool Function(String text)? confirmButtonValidator,
+    bool Function(double rating)? confirmButtonValidator,
     required String submitButtonTitle,
-    required  Function(String text,double rating)? onSubmit,
+    required Function(double rating)? onSubmit,
     String? cancelButtonTitle,
     ValueChanged<String>? onCancel,
     VoidCallback? onClose,
@@ -77,8 +75,6 @@ class AppInputDialog extends StatefulWidget {
       placeHolder: placeHolder,
       content: content,
       maxLength: maxLength,
-      onChange: onChange,
-      submitButtonValidator: confirmButtonValidator,
       submitButtonTitle: submitButtonTitle,
       onSubmit: onSubmit,
       cancelButtonTitle: cancelButtonTitle,
@@ -111,8 +107,6 @@ class AppInputDialog extends StatefulWidget {
     this.placeHolder,
     this.content,
     this.maxLength,
-    this.onChange,
-    this.submitButtonValidator,
     required this.submitButtonTitle,
     required this.onSubmit,
     this.cancelButtonTitle,
@@ -127,23 +121,19 @@ class AppInputDialog extends StatefulWidget {
 class _AppInputDialogState extends State<AppInputDialog> {
   static const double _horizontalPadding = 30;
   static const double _minimumDialogWidth = 300;
-  static const double _inputFieldHeight = 130;
   static const double _dialogPadding = 16;
 
   int index = 0;
-  double rating = 0;
+  double rating = 3;
 
   final ValueNotifier<bool> _isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _submitButtonEnabled = ValueNotifier<bool>(true);
-  final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     widget.controller?.bindState(this);
     _controller.text = widget.content ?? '';
-    _submitButtonEnabled.value =
-        widget.submitButtonValidator?.call(_controller.text) ?? true;
     super.initState();
   }
 
@@ -196,7 +186,19 @@ class _AppInputDialogState extends State<AppInputDialog> {
                     ),
                   ),
                   const SizedBox(height: _dialogPadding / 2),
-
+                  // Subtitle label
+                  if (widget.subTitle != null &&
+                      widget.subTitle!.isNotEmpty) ...[
+                    Text(
+                      widget.subTitle!,
+                      style: GoogleFonts.beVietnam(
+                        color: Colors.black.withOpacity(0.5),
+                        fontSize: 14,
+                      ),
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: _dialogPadding),
+                  ],
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -268,36 +270,7 @@ class _AppInputDialogState extends State<AppInputDialog> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: _dialogPadding / 2),
-
-                  // Subtitle label
-                  if (widget.subTitle != null &&
-                      widget.subTitle!.isNotEmpty) ...[
-                    Text(
-                      widget.subTitle!,
-                      style: GoogleFonts.beVietnam(
-                        color: Colors.black.withOpacity(0.5),
-                        fontSize: 14,
-                      ),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: _dialogPadding),
-                  ],
-
-                  // Input
-                  SizedBox(
-                    height: _inputFieldHeight,
-                    child: Form(
-                      key: _formKey,
-                      child: ValueListenableBuilder<bool>(
-                          valueListenable: _isLoading,
-                          builder: (context, isLoading, child) {
-                            return _buildInputField();
-                          }),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-
+                  const SizedBox(height: 25),
                   // Buttons
                   ValueListenableBuilder<bool>(
                     valueListenable: _submitButtonEnabled,
@@ -342,6 +315,7 @@ class _AppInputDialogState extends State<AppInputDialog> {
       buttons.addAll([
         Expanded(
           child: CustomButton(
+            isLoading: true,
             title: widget.cancelButtonTitle,
             style: CustomButtonStyle.empty,
             showBorder: true,
@@ -361,7 +335,8 @@ class _AppInputDialogState extends State<AppInputDialog> {
       title: widget.submitButtonTitle,
       onPressed: _submitButtonEnabled.value
           ? () {
-              widget.onSubmit!(_controller.text,rating);
+              widget.onSubmit!(rating);
+              Get.back();
             }
           : null,
     );
@@ -375,56 +350,4 @@ class _AppInputDialogState extends State<AppInputDialog> {
       children: buttons,
     );
   }
-
-  Widget _buildInputField() {
-    return Material(
-      child: TextFormField(
-        readOnly: _isLoading.value,
-        enableInteractiveSelection: !_isLoading.value,
-        maxLengthEnforcement: MaxLengthEnforcement.enforced,
-        controller: _controller,
-        keyboardType: TextInputType.multiline,
-        maxLines: 10000,
-        autofocus: true,
-        toolbarOptions: const ToolbarOptions(
-          copy: true,
-          cut: true,
-          paste: true,
-          selectAll: true,
-        ),
-        onChanged: (text) {
-          _submitButtonEnabled.value =
-              widget.submitButtonValidator?.call(text) ?? true;
-        },
-        style: GoogleFonts.beVietnam(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-        ),
-        cursorColor: Color(0xff222d39),
-        decoration: InputDecoration(
-          isDense: true,
-          filled: true,
-          enabledBorder: _inputBorder(),
-          focusedBorder: _inputBorder(),
-          errorBorder: _inputBorder(),
-          border: _inputBorder(),
-          fillColor: Color(0xffE1E1E1),
-          disabledBorder: _inputBorder(),
-          focusedErrorBorder: _inputBorder(),
-          hintText: widget.placeHolder,
-          hintStyle: GoogleFonts.beVietnam(
-            fontSize: 15,
-            color: Colors.black.withOpacity(0.4),
-          ),
-          contentPadding: const EdgeInsets.all(10),
-          // counter: Container(),
-        ),
-      ),
-    );
-  }
-
-  OutlineInputBorder _inputBorder() => OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        borderSide: BorderSide(color: Color(0xffE1E1E1)),
-      );
 }
