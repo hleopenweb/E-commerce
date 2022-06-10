@@ -20,6 +20,8 @@ class HomeController extends GetxController {
   Rx<UserModel> user = UserModel().obs;
   RxInt selectedIndex = 0.obs;
   final Rx<Product> product = Product().obs;
+  final Rx<Product> recommendProduct = Product().obs;
+  final RxList<Content> recommendCategoryProducts = RxList();
   final RxList<Content> categoryProducts = RxList();
 
   final page = 0.obs;
@@ -29,8 +31,7 @@ class HomeController extends GetxController {
   RxBool isLoadingProductRecommend = false.obs;
   RxBool isLoadMoreProduct = false.obs;
   RxBool isLoading = true.obs;
-  final TextEditingController textEditingController  = TextEditingController();
-
+  final TextEditingController textEditingController = TextEditingController();
 
   RxBool isFavorite = false.obs;
 
@@ -44,7 +45,8 @@ class HomeController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     scrollController = ScrollController()..addListener(_scrollListener);
-    await fetchProduct();
+    fetchProduct();
+    fetchRecommendProduct();
   }
 
   Future<void> _scrollListener() async {
@@ -65,7 +67,7 @@ class HomeController extends GetxController {
   Future<void> fetchProduct() async {
     page.value = 0;
     categoryProducts.clear();
-    await loadCategoryProducts(
+    loadCategoryProducts(
       page: page.value,
       limit: 10,
       sort: 'price,ASC',
@@ -74,22 +76,50 @@ class HomeController extends GetxController {
     );
   }
 
+  Future<void> fetchRecommendProduct() async {
+    categoryProducts.clear();
+    await loadRecommendedProducts(
+        page: 0, limit: 10, sort: 'id,ASC', id: UserModel().id);
+  }
+
+  Future<void> loadRecommendedProducts({
+    int? limit,
+    int? page,
+    String? sort,
+    int? id,
+  }) async {
+    try {
+      isLoadingProductRecommend(true);
+      recommendProduct.value = (await apiRepositoryInterface
+              .getRecommendProduct(limit, page, sort, id)) ??
+          Product();
+      if (recommendProduct.value.content!.isNotEmpty) {
+        recommendCategoryProducts.addAll(recommendProduct.value.content!);
+      }
+    } catch (e) {
+      isLoadingProductRecommend(false);
+      rethrow;
+    } finally {
+      isLoadingProductRecommend(false);
+    }
+  }
+
   Future<void> loadCategoryProducts(
       {int? limit,
-        int? page,
-        String? sort,
-        String? productName,
-        int? categoryId,
-        bool? isLoadProduct}) async {
+      int? page,
+      String? sort,
+      String? productName,
+      int? categoryId,
+      bool? isLoadProduct}) async {
     try {
       isLoadProduct! ? isLoadMoreProduct(true) : isLoadingProduct(true);
       product.value = (await apiRepositoryInterface.getCategoryProduct(
-        limit,
-        page,
-        sort,
-        productName,
-        categoryId,
-      )) ??
+            limit,
+            page,
+            sort,
+            productName,
+            categoryId,
+          )) ??
           Product();
       if (product.value.content!.isNotEmpty) {
         categoryProducts.addAll(product.value.content!);

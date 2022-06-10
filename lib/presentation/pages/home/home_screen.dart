@@ -5,7 +5,9 @@ import 'package:sajilo_dokan/presentation/pages/home/views/header.dart';
 import 'package:sajilo_dokan/presentation/pages/home/views/sajilo_carousel.dart';
 import 'package:sajilo_dokan/presentation/pages/landing_home/home_controller.dart';
 import 'package:sajilo_dokan/presentation/widgets/block_header.dart';
+import 'package:sajilo_dokan/presentation/widgets/loading_view.dart';
 import 'package:sajilo_dokan/presentation/widgets/product_gridview_tile.dart';
+import 'package:sajilo_dokan/presentation/widgets/product_tile.dart';
 import 'package:sajilo_dokan/presentation/widgets/scaffold.dart';
 import 'package:sajilo_dokan/presentation/widgets/shimmer_item.dart';
 
@@ -34,25 +36,29 @@ class Home extends StatelessWidget {
                 linkText: 'Xem tất cả',
               ),
               Obx(() {
-                if (!controller.isLoadingProduct.value) {
+                if (!controller.isLoadingProductRecommend.value) {
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
-                        children: controller.categoryProducts
+                        children: controller.recommendCategoryProducts
                             .map(
                               (element) => ProductTile(
-                            product: element,
-                          ),
-                        )
+                                product: element,
+                              ),
+                            )
                             .toList(),
                       ),
                     ),
                   );
                 } else {
-                  return Center(child: LoadingWidget());
+                  return ListView(
+                    scrollDirection: Axis.horizontal,
+                    physics: NeverScrollableScrollPhysics(),
+                    children:[],
+                  );
                 }
               }),
               BlockHeader(

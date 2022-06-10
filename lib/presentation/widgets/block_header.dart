@@ -17,7 +17,7 @@ class BlockHeader extends StatelessWidget {
           Text(
             title!,
             style:
-                GoogleFonts.beVietnam(textStyle: TextStyle(fontSize: 16)),
+                GoogleFonts.beVietnam(textStyle: TextStyle(fontSize: 18,fontWeight: FontWeight.w700)),
           ),
           Spacer(),
           InkWell(
