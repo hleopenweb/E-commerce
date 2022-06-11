@@ -54,8 +54,7 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                   actions: [
                     InkWell(
                       onTap: () {
-                        Get.toNamed(Routes.cart);
-                        Get.find<CartController>().hasLeadingIcon.value = true;
+                        Get.toNamed(Routes.cart,arguments: true);
                       },
                       child: Container(
                         alignment: Alignment.center,

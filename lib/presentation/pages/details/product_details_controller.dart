@@ -29,7 +29,7 @@ class ProductDetailsController extends GetxController
   final UserRepositoryInterface userRepositoryInterface;
 
   RxInt selectedImage = 0.obs;
-  RxInt count = 0.obs;
+  RxInt count = 1.obs;
 
   final dataKey = GlobalKey();
 
@@ -67,7 +67,7 @@ class ProductDetailsController extends GetxController
   // We can detech the location of the card by this  GlobalKey<CartIconKey>
   GlobalKey<CartIconKey> gkCart = GlobalKey<CartIconKey>();
   late Function(GlobalKey) runAddToCardAnimation;
-  final cartQuantityItems = 0.obs;
+  final cartQuantityItems = 1.obs;
 
   @override
   Future<void> onInit() async {
@@ -75,6 +75,8 @@ class ProductDetailsController extends GetxController
       args = Get.arguments as int;
       fetchContent(id: args);
     }
+    await gkCart.currentState!.runCartAnimation(
+        (Get.find<CartController>().contentCartList.length).toString());
     //Initialize Animation Controller
     animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
@@ -90,8 +92,6 @@ class ProductDetailsController extends GetxController
       productId: content.value.id,
     );
     fetchProduct();
-    gkCart.currentState!.runCartAnimation(
-        (Get.find<CartController>().contentCartList.length).toString());
 
     super.onInit();
   }
@@ -163,8 +163,7 @@ class ProductDetailsController extends GetxController
     );
     if (res != null) {
       _handleSuccess(context);
-    }
-    else{
+    } else {
       _handleFailed(context);
     }
   }
@@ -199,7 +198,7 @@ class ProductDetailsController extends GetxController
                 ),
               ),
               onPressed: () {
-               Get.back();
+                Get.back();
               },
             ),
             CupertinoDialogAction(
@@ -338,11 +337,12 @@ class ProductDetailsController extends GetxController
             productId,
           )) ??
           CommentResponse();
-      if (comments.value.content!= null && comments.value.content!.isNotEmpty) {
+      if (comments.value.content != null &&
+          comments.value.content!.isNotEmpty) {
         commentContent.addAll(comments.value.content!);
         for (final comment in commentContent) {
-            final user = await getUserInfo(comment.customerId ?? 1);
-            listUserComments.add(user);
+          final user = await getUserInfo(comment.customerId ?? 1);
+          listUserComments.add(user);
         }
       }
 
@@ -449,5 +449,4 @@ class ProductDetailsController extends GetxController
       maxLength: 255,
     );
   }
-
 }

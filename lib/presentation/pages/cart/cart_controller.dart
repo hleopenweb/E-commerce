@@ -47,6 +47,9 @@ class CartController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (Get.arguments != null) {
+      hasLeadingIcon.value = Get.arguments as bool;
+    }
     fetchCartList(
       page: page.value,
       limit: 100,
