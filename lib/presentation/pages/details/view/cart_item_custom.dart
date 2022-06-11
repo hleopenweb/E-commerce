@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sajilo_dokan/domain/response/cart_response.dart';
+import 'package:sajilo_dokan/presentation/routes/sajilodokan_navigation.dart';
 import 'package:sajilo_dokan/presentation/widgets/add_quantity.dart';
 import 'package:sajilo_dokan/presentation/widgets/loading_view.dart';
 import 'package:sajilo_dokan/utils/converter_currency.dart';
@@ -18,28 +20,31 @@ class CartItemCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(0, 10.0, 10.0, 10.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.black12,
+    return InkWell(
+      onTap: () => Get.toNamed(Routes.productDetails, arguments: cartItem?.productId),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(0, 10.0, 10.0, 10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.black12,
+            ),
           ),
         ),
-      ),
-      child: Row(
-        children: <Widget>[
-          Flexible(child: _checkBoxCartGoods(context)),
-          Flexible(flex: 2, child: _imageCartGoods()),
-          SizedBox(
-            width: 40,
-          ),
-          Flexible(
-            child: _cartGoodsNameCount(context),
-            flex: 3,
-          ),
-        ],
+        child: Row(
+          children: <Widget>[
+            Flexible(child: _checkBoxCartGoods(context)),
+            Flexible(flex: 2, child: _imageCartGoods()),
+            SizedBox(
+              width: 40,
+            ),
+            Flexible(
+              child: _cartGoodsNameCount(context),
+              flex: 3,
+            ),
+          ],
+        ),
       ),
     );
   }
