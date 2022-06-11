@@ -35,6 +35,7 @@ class Home extends StatelessWidget {
                 title: 'Được đề xuất cho bạn',
                 linkText: 'Xem tất cả',
               ),
+              SizedBox(height: 20,),
               Obx(() {
                 if (!controller.isLoadingProductRecommend.value) {
                   return SingleChildScrollView(
