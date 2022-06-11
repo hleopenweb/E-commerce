@@ -40,6 +40,7 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
         return Scaffold(
           body: SafeArea(
             child: CustomScrollView(
+              shrinkWrap: true,
               slivers: [
                 SliverAppBar(
                   leading: IconButton(
@@ -139,7 +140,7 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                 SliverList(
                   delegate: SliverChildListDelegate([
                     SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
+                      physics: NeverScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           Container(

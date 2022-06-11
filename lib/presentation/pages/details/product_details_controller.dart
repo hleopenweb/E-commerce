@@ -73,7 +73,7 @@ class ProductDetailsController extends GetxController
   Future<void> onInit() async {
     if (Get.arguments != null) {
       args = Get.arguments as int;
-      await fetchContent(id: args);
+      fetchContent(id: args);
     }
     //Initialize Animation Controller
     animationController =
@@ -83,14 +83,14 @@ class ProductDetailsController extends GetxController
     animationController.forward();
     animationController.addListener(() => print(animationController.value));
     controllerState = PhotoViewScaleStateController();
-    await getComments(
+    getComments(
       page: page.value,
       limit: 3,
       sort: 'id,$sort',
       productId: content.value.id,
     );
-    await fetchProduct();
-    await gkCart.currentState!.runCartAnimation(
+    fetchProduct();
+    gkCart.currentState!.runCartAnimation(
         (Get.find<CartController>().contentCartList.length).toString());
 
     super.onInit();
