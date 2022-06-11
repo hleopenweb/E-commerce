@@ -31,7 +31,7 @@ class ShimmerItem extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
                   clipBehavior: Clip.antiAlias,

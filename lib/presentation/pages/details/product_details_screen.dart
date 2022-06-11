@@ -18,6 +18,7 @@ import 'package:sajilo_dokan/presentation/routes/sajilodokan_navigation.dart';
 import 'package:sajilo_dokan/presentation/widgets/add_quantity.dart';
 import 'package:sajilo_dokan/presentation/widgets/loading_view.dart';
 import 'package:sajilo_dokan/presentation/widgets/product_tile.dart';
+import 'package:sajilo_dokan/presentation/widgets/shimmer_item.dart';
 import 'package:sajilo_dokan/utils/convert_utils.dart';
 import 'package:sajilo_dokan/utils/converter_currency.dart';
 import 'package:share/share.dart';
@@ -138,6 +139,7 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                 SliverList(
                   delegate: SliverChildListDelegate([
                     SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
                       child: Column(
                         children: [
                           Container(
@@ -283,7 +285,8 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                                         ),
                                       ),
                                       GestureDetector(
-                                        onTap: () => controller.onFeedback(context),
+                                        onTap: () =>
+                                            controller.onFeedback(context),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border:
@@ -690,17 +693,16 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                               color: kDividerColor.withOpacity(0.2)),
                           SizedBox(height: 15),
                           Container(
+                            alignment: Alignment.centerLeft,
                             color: Colors.white.withOpacity(0.4),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Sản phẩm tương tự',
-                                  style: GoogleFonts.beVietnam(
-                                    textStyle: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Sản phẩm tương tự',
+                                style: GoogleFonts.beVietnam(
+                                  textStyle: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -712,7 +714,7 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                                 scrollDirection: Axis.horizontal,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
+                                      horizontal: 4.0),
                                   child: Row(
                                     children: controller.categoryProducts
                                         .map(
@@ -725,10 +727,13 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                                 ),
                               );
                             } else {
-                              return Center(child: LoadingWidget());
+                              return ShimmerItem(
+                                isGrid: true,
+                                itemCount: 2,
+                              );
                             }
                           }),
-                          SizedBox(height: 20),
+                          SizedBox(height: 30),
                         ],
                       ),
                     )
