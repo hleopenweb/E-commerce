@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sajilo_dokan/domain/response/cart_response.dart';
+import 'package:sajilo_dokan/presentation/pages/cart/cart_controller.dart';
 import 'package:sajilo_dokan/presentation/routes/sajilodokan_navigation.dart';
 import 'package:sajilo_dokan/presentation/widgets/add_quantity.dart';
 import 'package:sajilo_dokan/presentation/widgets/loading_view.dart';
@@ -21,7 +22,10 @@ class CartItemCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(Routes.productDetails, arguments: cartItem?.productId),
+      onTap: () {
+        Get.toNamed(Routes.productDetails, arguments: cartItem?.productId);
+        Get.find<CartController>().hasLeadingIcon.value = false;
+      },
       child: Container(
         padding: EdgeInsets.fromLTRB(0, 10.0, 10.0, 10.0),
         decoration: BoxDecoration(

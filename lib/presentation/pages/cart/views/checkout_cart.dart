@@ -5,6 +5,8 @@ import 'package:sajilo_dokan/config/theme.dart';
 import 'package:sajilo_dokan/presentation/routes/sajilodokan_navigation.dart';
 import 'package:sajilo_dokan/utils/converter_currency.dart';
 
+import '../cart_controller.dart';
+
 class CheckoutCart extends StatelessWidget {
   final totalAmount;
 
@@ -49,8 +51,10 @@ class CheckoutCart extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () =>
-                Get.toNamed(Routes.payment, arguments: totalAmount.toInt()),
+            onTap: () {
+              Get.toNamed(Routes.payment, arguments: totalAmount.toInt());
+              Get.find<CartController>().hasLeadingIcon.value = false;
+            },
             child: Container(
               height: 60,
               decoration: BoxDecoration(

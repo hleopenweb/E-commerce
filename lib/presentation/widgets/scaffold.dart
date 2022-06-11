@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sajilo_dokan/presentation/pages/cart/cart_controller.dart';
 
 class MyScaffold extends StatelessWidget {
   MyScaffold(
@@ -34,7 +35,11 @@ class MyScaffold extends StatelessWidget {
                 leading: hasLeadingIcon
                     ? IconButton(
                         icon: Icon(Icons.arrow_back),
-                        onPressed: () => Get.back(),
+                        onPressed: () {
+                          Get.back();
+                          Get.find<CartController>().hasLeadingIcon.value =
+                              false;
+                        },
                       )
                     : null,
                 title: Padding(

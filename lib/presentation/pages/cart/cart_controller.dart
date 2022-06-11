@@ -47,15 +47,18 @@ class CartController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    if (Get.arguments != null) {
-      hasLeadingIcon.value = Get.arguments as bool;
-    }
     fetchCartList(
       page: page.value,
       limit: 100,
       sort: 'id,$sort',
       customerId: UserModel().id,
     );
+  }
+
+  @override
+  void onClose() {
+    Get.find<CartController>().hasLeadingIcon.value = false;
+    super.onClose();
   }
 
   Future<void> fetchCartList({
