@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sajilo_dokan/config/theme.dart';
 
@@ -6,9 +7,13 @@ class ShimmerItem extends StatelessWidget {
   const ShimmerItem({
     Key? key,
     required this.isGrid,
+    this.crossAxisCount = 2,
+    this.itemCount = 4,
   }) : super(key: key);
 
   final bool isGrid;
+  final int crossAxisCount;
+  final int itemCount;
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +22,8 @@ class ShimmerItem extends StatelessWidget {
         shrinkWrap: true,
         padding: EdgeInsets.symmetric(horizontal: 5),
         primary: false,
-        crossAxisCount: 2,
-        itemCount: 4,
+        crossAxisCount: crossAxisCount,
+        itemCount: itemCount,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
         itemBuilder: (context, index) => Card(

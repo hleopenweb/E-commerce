@@ -54,10 +54,9 @@ class Home extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return ListView(
-                    scrollDirection: Axis.horizontal,
-                    physics: NeverScrollableScrollPhysics(),
-                    children:[],
+                  return ShimmerItem(
+                    isGrid: true,
+                    itemCount: 2,
                   );
                 }
               }),
