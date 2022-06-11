@@ -25,7 +25,7 @@ Using GetX State Management
 
 Order History                    |   Category-normal              |  Profile
 :-------------------------:|:-------------------------:|:-------------------------:
-![](screenshots/login.png)|![](screenshots/category-electronic.png)|![](screenshots/profile.png)
+![](screenshots/order.png)|![](screenshots/category-electronic.png)|![](screenshots/profile.png)
 
 
 ## Directory Tree
