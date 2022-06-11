@@ -19,10 +19,13 @@ Using GetX State Management
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](screenshots/home.png)|![](screenshots/product-desc.png)|![](screenshots/cart.png)
 
-  Login                    |   Category-type              |  Account
+  Login                    |   Category-type              |  Setting Screen
 :-------------------------:|:-------------------------:|:-------------------------:
-![](screenshots/login.png)|![](screenshots/category-clothes.png)|![](screenshots/account.png)
+![](screenshots/login.png)|![](screenshots/category-grid.png)|![](screenshots/setting.png)
 
+Order History                    |   Category-normal              |  Profile
+:-------------------------:|:-------------------------:|:-------------------------:
+![](screenshots/login.png)|![](screenshots/category-electronic.png)|![](screenshots/profile.png)
 
 
 ## Directory Tree
