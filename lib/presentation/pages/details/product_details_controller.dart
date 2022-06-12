@@ -47,6 +47,7 @@ class ProductDetailsController extends GetxController
   final content = Content().obs;
   late int args;
   final sort = 'ASC'.obs;
+  final sortComment = 'DESC'.obs;
   final page = 0.obs;
   final _inputController = AppInputDialogController();
 
@@ -80,7 +81,7 @@ class ProductDetailsController extends GetxController
         getComments(
           page: page.value,
           limit: 3,
-          sort: 'id,$sort',
+          sort: 'id,$sortComment',
           productId: content.value.id,
           isLoadComment: false,
         );
@@ -375,7 +376,7 @@ class ProductDetailsController extends GetxController
       await getComments(
         page: page.value,
         limit: 3,
-        sort: 'id,$sort',
+        sort: 'id,$sortComment',
         productId: content.value.id,
         isLoadComment: false,
       );

@@ -437,7 +437,7 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                                                 page: controller.page.value,
                                                 limit: 3,
                                                 sort:
-                                                    'id,${controller.sort.value}',
+                                                    'id,${controller.sortComment.value}',
                                                 productId:
                                                     controller.content.value.id,
                                                 isLoadComment: true,
