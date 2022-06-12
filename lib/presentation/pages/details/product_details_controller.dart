@@ -357,7 +357,8 @@ class ProductDetailsController extends GetxController
     }
   }
 
-  Future<void> writeComment() async {
+  Future<void> writeComment(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     final comment = textEditingController.text;
     textEditingController.clear();
     try {
@@ -370,6 +371,7 @@ class ProductDetailsController extends GetxController
       );
       commentContent.clear();
       listUserComments.clear();
+      page.value = 0;
       await getComments(
         page: page.value,
         limit: 3,

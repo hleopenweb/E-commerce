@@ -639,7 +639,7 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                                           ),
                                           IconButton(
                                             onPressed: () async {
-                                              await controller.writeComment();
+                                              await controller.writeComment(context);
                                               controller.isComment.toggle();
                                             },
                                             icon: Icon(

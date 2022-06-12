@@ -13,7 +13,6 @@ import 'package:sajilo_dokan/presentation/pages/forgot-password/check_account_sc
 import 'package:sajilo_dokan/presentation/pages/forgot-password/create_new_password_screen.dart';
 import 'package:sajilo_dokan/presentation/pages/forgot-password/forgot_password_binding.dart';
 import 'package:sajilo_dokan/presentation/pages/forgot-password/send_code_screen.dart';
-
 import 'package:sajilo_dokan/presentation/pages/home/home_screen.dart';
 import 'package:sajilo_dokan/presentation/pages/landing_home/home_binding.dart';
 import 'package:sajilo_dokan/presentation/pages/landing_home/landing_home.dart';
@@ -29,8 +28,8 @@ import 'package:sajilo_dokan/presentation/pages/payment_success/payment_success_
 import 'package:sajilo_dokan/presentation/pages/payment_success/payment_success_view.dart';
 import 'package:sajilo_dokan/presentation/pages/profile_screen/profile_binding.dart';
 import 'package:sajilo_dokan/presentation/pages/profile_screen/profile_view.dart';
-import 'package:sajilo_dokan/presentation/pages/splash/splash_screen.dart';
 import 'package:sajilo_dokan/presentation/pages/splash/splash_binding.dart';
+import 'package:sajilo_dokan/presentation/pages/splash/splash_screen.dart';
 import 'package:sajilo_dokan/presentation/payment_by_paypal/payment_paypal_binding.dart';
 import 'package:sajilo_dokan/presentation/payment_by_paypal/payment_paypal_view.dart';
 
