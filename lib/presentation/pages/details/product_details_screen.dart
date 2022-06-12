@@ -433,13 +433,14 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                                           InkWell(
                                             onTap: () async {
                                               controller.page.value += 1;
-                                              await controller.getComments(
+                                              controller.getComments(
                                                 page: controller.page.value,
                                                 limit: 3,
                                                 sort:
                                                     'id,${controller.sort.value}',
                                                 productId:
                                                     controller.content.value.id,
+                                                isLoadComment: true,
                                               );
                                             },
                                             child: Container(
@@ -455,7 +456,8 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                                                 child: Text(
                                                   'Xem thêm bình luận',
                                                   style: GoogleFonts.beVietnam(
-                                                      color: Colors.blue),
+                                                    color: Colors.blue,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -464,132 +466,136 @@ class ProductDetailsScreen extends GetWidget<ProductDetailsController> {
                                       ),
                                     ),
                                     ...List.generate(
-                                        controller.commentContent.length,
-                                        (index) => !controller
-                                                .isCommentsLoad.value
-                                            ? Card(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            controller
-                                                                    .listUserComments[
-                                                                index],
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black
-                                                                    .withOpacity(
-                                                                        0.8),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700),
-                                                          ),
-                                                          Spacer(),
-                                                          ProductRating(
-                                                            rating: controller
-                                                                    .content
-                                                                    .value
-                                                                    .ratingAverage ??
-                                                                0.0,
-                                                            isReadOnly: true,
-                                                            size: 12,
-                                                            borderColor: Colors
-                                                                .red
-                                                                .withOpacity(
-                                                                    0.8),
-                                                            color: Colors.red,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 15,
-                                                          )
-                                                        ],
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            controller
-                                                                .commentContent[
-                                                                    index]
-                                                                .comment!,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                            formatterFullDate(
-                                                                controller
-                                                                    .commentContent[
-                                                                        index]
-                                                                    .createdDate!),
-                                                            style: TextStyle(
-                                                              fontSize: 14,
+                                      controller.commentContent.length,
+                                      (index) => controller
+                                              .commentContent.isNotEmpty
+                                          ? Card(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          controller
+                                                                      .listUserComments[
+                                                                  index]
+                                                              ,
+                                                          style: TextStyle(
                                                               color: Colors
                                                                   .black
                                                                   .withOpacity(
-                                                                      0.6),
-                                                            ),
+                                                                      0.8),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                        ),
+                                                        Spacer(),
+                                                        ProductRating(
+                                                          rating: controller
+                                                                  .content
+                                                                  .value
+                                                                  .ratingAverage ??
+                                                              0.0,
+                                                          isReadOnly: true,
+                                                          size: 12,
+                                                          borderColor: Colors
+                                                              .red
+                                                              .withOpacity(0.8),
+                                                          color: Colors.red,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 15,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          controller
+                                                                  .commentContent[
+                                                                      index]
+                                                                  .comment ??
+                                                              '',
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          formatterFullDate(
+                                                            controller
+                                                                .commentContent[
+                                                                    index]
+                                                                .createdDate!,
                                                           ),
-                                                          Spacer(),
-                                                          IconButton(
-                                                            icon: Icon(
-                                                              Icons
-                                                                  .thumb_up_alt_outlined,
-                                                              size: 12,
-                                                              color:
-                                                                  Colors.blue,
-                                                            ),
-                                                            onPressed: () {
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.6),
+                                                          ),
+                                                        ),
+                                                        Spacer(),
+                                                        IconButton(
+                                                          icon: Icon(
+                                                            Icons
+                                                                .thumb_up_alt_outlined,
+                                                            size: 12,
+                                                            color: Colors.blue,
+                                                          ),
+                                                          onPressed: () {
+                                                            controller.likeBtn(
                                                               controller
-                                                                  .likeBtn(
-                                                                controller
-                                                                    .commentContent[
-                                                                        index]
-                                                                    .id,
-                                                                controller
-                                                                    .content
-                                                                    .value
-                                                                    .id,
-                                                              );
-                                                            },
+                                                                  .commentContent[
+                                                                      index]
+                                                                  .id,
+                                                              controller.content
+                                                                  .value.id,
+                                                            );
+                                                          },
+                                                        ),
+                                                        Text(
+                                                          '7',
+                                                          style: TextStyle(
+                                                            fontSize: 12,
                                                           ),
-                                                          Text(
-                                                            '7',
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                                elevation: 0.5,
-                                              )
-                                            : LoadingWidget())
+                                              ),
+                                              elevation: 0.5,
+                                            )
+                                          : SizedBox(),
+                                    ),
                                   ],
                                 ),
                               );
                             } else {
                               return LoadingWidget();
+                            }
+                          }),
+                          Obx(() {
+                            if (controller.isCommentsLoadMore.value) {
+                              return LoadingWidget();
+                            } else {
+                              return SizedBox();
                             }
                           }),
                           SizedBox(height: 15),
@@ -758,4 +764,33 @@ class ProductDetailsArguments {
   ProductDetailsArguments({this.product});
 
   final Content? product;
+}
+
+class Range extends Iterable<int> {
+  const Range(this.start, this.end) : assert(start <= end);
+
+  const Range.fromLength(int length) : this(0, length - 1);
+
+  final int start;
+  final int end;
+
+  @override
+  int get length => end - start + 1;
+
+  @override
+  Iterator<int> get iterator =>
+      Iterable.generate(length, (i) => start + i).iterator;
+
+  @override
+  bool contains(Object? index) {
+    if (index == null || index is! int) return false;
+    return index >= start && index <= end;
+  }
+
+  @override
+  String toString() => '[$start, $end]';
+}
+
+extension ListExtensions on List {
+  Range get indices => Range.fromLength(length);
 }

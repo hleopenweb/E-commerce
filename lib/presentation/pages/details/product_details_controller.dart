@@ -40,6 +40,7 @@ class ProductDetailsController extends GetxController
 
   final Rx<CommentResponse> comments = CommentResponse().obs;
   RxBool isCommentsLoad = false.obs;
+  RxBool isCommentsLoadMore = false.obs;
   final RxList<Comments> commentContent = RxList();
   final RxList<String> listUserComments = RxList();
   final TextEditingController textEditingController = TextEditingController();
@@ -81,6 +82,7 @@ class ProductDetailsController extends GetxController
           limit: 3,
           sort: 'id,$sort',
           productId: content.value.id,
+          isLoadComment: false,
         );
         fetchProduct();
       });
@@ -321,16 +323,14 @@ class ProductDetailsController extends GetxController
     }
   }
 
-  Future<void> getComments({
-    int? limit,
-    int? page,
-    String? sort,
-    int? productId,
-  }) async {
-    commentContent.clear();
-    listUserComments.clear();
+  Future<void> getComments(
+      {int? limit,
+      int? page,
+      String? sort,
+      int? productId,
+      required bool isLoadComment}) async {
     try {
-      isCommentsLoad(true);
+      isLoadComment ? isCommentsLoadMore(true) : isCommentsLoad(true);
       comments.value = (await apiRepositoryInterface.getCommentProduct(
             limit,
             page,
@@ -338,21 +338,22 @@ class ProductDetailsController extends GetxController
             productId,
           )) ??
           CommentResponse();
-      if (comments.value.content != null &&
-          comments.value.content!.isNotEmpty) {
-        commentContent.addAll(comments.value.content!);
-        for (final comment in commentContent) {
+
+      final list = comments.value.content;
+      if (list != null && list.isNotEmpty) {
+        for (final comment in list) {
           final user = await getUserInfo(comment.customerId ?? 1);
           listUserComments.add(user);
         }
+        commentContent.addAll(list);
       }
 
       print(commentContent.length);
     } catch (e) {
-      isCommentsLoad(false);
+      isLoadComment ? isCommentsLoadMore(false) : isCommentsLoad(false);
       rethrow;
     } finally {
-      isCommentsLoad(false);
+      isLoadComment ? isCommentsLoadMore(false) : isCommentsLoad(false);
     }
   }
 
@@ -367,14 +368,14 @@ class ProductDetailsController extends GetxController
             productId: content.value.id,
             customerId: UserModel().id),
       );
-      page.value = 0;
-      listUserComments.clear();
       commentContent.clear();
+      listUserComments.clear();
       await getComments(
         page: page.value,
         limit: 3,
         sort: 'id,$sort',
         productId: content.value.id,
+        isLoadComment: false,
       );
       isCommentsLoad(false);
     } on Exception {
