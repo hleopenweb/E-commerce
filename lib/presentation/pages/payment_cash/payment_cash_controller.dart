@@ -82,7 +82,8 @@ class PaymentCashController extends GetxController {
     }
   }
 
-  Future<void> payment() async {
+  Future<void> payment(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     switch (paymentMethod) {
       case 'CASH':
         paymentByCash();

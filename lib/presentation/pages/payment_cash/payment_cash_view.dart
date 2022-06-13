@@ -226,7 +226,7 @@ class PaymentCashView extends GetView<PaymentCashController> {
                           ),
                         ),
                       ),
-                      onPressed: () => controller.payment(),
+                      onPressed: () => controller.payment(context),
                     ),
                   ),
                 ],
