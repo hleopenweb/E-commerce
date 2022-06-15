@@ -10,7 +10,7 @@ class ProductGridviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StaggeredGridView.countBuilder(
-        padding: const EdgeInsets.only(left: 5, right: 5,top:15),
+        padding: const EdgeInsets.only(left: 5, right: 5,top:10),
         shrinkWrap: true,
         primary: false,
         crossAxisCount: 2,

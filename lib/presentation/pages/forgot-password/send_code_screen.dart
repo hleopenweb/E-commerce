@@ -93,38 +93,35 @@ class SendCodeScreen extends GetWidget<ForgotPasswordController> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(20.0),
-                                child: Container(
-                                  width: 30,
-                                  child: RawKeyboardListener(
+                                child: RawKeyboardListener(
+                                  autofocus: true,
+                                  focusNode: FocusNode(),
+                                  onKey: (event) {
+                                    if (event.logicalKey ==
+                                        LogicalKeyboardKey.backspace) {
+                                      f2.unfocus();
+                                      FocusScope.of(context).requestFocus(f1);
+                                    }
+                                  },
+                                  child: TextField(
+                                    focusNode: f2,
                                     autofocus: true,
-                                    focusNode: FocusNode(),
-                                    onKey: (event) {
-                                      if (event.logicalKey ==
-                                          LogicalKeyboardKey.backspace) {
-                                        f2.unfocus();
-                                        FocusScope.of(context).requestFocus(f1);
+                                    textAlign: TextAlign.center,
+                                    controller: secondDigit,
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (str) {
+                                      if (str.length == 1) {
+                                        FocusScope.of(context)
+                                            .requestFocus(f3);
+                                      }
+                                      if (str.length == 0) {
+                                        FocusScope.of(context)
+                                            .requestFocus(f1);
                                       }
                                     },
-                                    child: TextField(
-                                      focusNode: f2,
-                                      autofocus: true,
-                                      textAlign: TextAlign.center,
-                                      controller: secondDigit,
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (str) {
-                                        if (str.length == 1) {
-                                          FocusScope.of(context)
-                                              .requestFocus(f3);
-                                        }
-                                        if (str.length == 0) {
-                                          FocusScope.of(context)
-                                              .requestFocus(f1);
-                                        }
-                                      },
-                                      maxLength: 1,
-                                      decoration:
-                                          InputDecoration(counterText: ''),
-                                    ),
+                                    maxLength: 1,
+                                    decoration:
+                                        InputDecoration(counterText: ''),
                                   ),
                                 ),
                               ),
