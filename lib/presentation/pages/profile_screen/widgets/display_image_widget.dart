@@ -33,15 +33,11 @@ class DisplayImage extends StatelessWidget {
   // Builds Profile Image
   Widget buildImage(Color color) {
     final image = MemoryImage(
-      base64.decode(UserModel().profilePicture ?? ''),
+      base64.decode(imagePath),
     );
     return CircleAvatar(
-      radius: 75,
-      backgroundColor: color,
-      child: CircleAvatar(
-        backgroundImage: image,
-        radius: 70,
-      ),
+      backgroundImage: image,
+      radius: 70,
     );
   }
 

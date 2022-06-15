@@ -12,23 +12,7 @@ class SplashScreen extends GetWidget<SplashController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 80,
-              backgroundColor: Colors.blue.withOpacity(0.2),
-              child: Image.asset('assets/images/cart_arrow_down.png'),
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            Text(
-              'Spider Shop',
-              style: GoogleFonts.ubuntu(
-                textStyle: TextStyle(
-                    fontSize: 24,
-                    color: kPrimaryColor,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
+            Image.asset('assets/images/cart_arrow_down.png'),
           ],
         ),
       ),

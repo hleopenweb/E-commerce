@@ -12,18 +12,15 @@ class DefaultLogo extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Image.asset(
-                'assets/images/cart_arrow_down.png',
-                height: 50,
-              ),
+            Image.asset(
+              'assets/images/cart_arrow_down.png',
+              height: 120,
             ),
             Text(
               'Spider Shop',
               style: GoogleFonts.beVietnam(
                 textStyle: TextStyle(
-                    fontSize: 16,
+                    fontSize: 20,
                     color: kPrimaryColor,
                     fontWeight: FontWeight.w700),
               ),

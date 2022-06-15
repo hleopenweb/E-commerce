@@ -22,18 +22,23 @@ class SplashController extends GetxController {
     final user = await localRepositoryInterface.getUser();
     if (user != null) {
       if (user.refreshToken != null) {
-        final loginResponse = await userRepositoryInterface.refreshToken(user.refreshToken!);
+        final loginResponse =
+            await userRepositoryInterface.refreshToken(user.refreshToken!);
         if (loginResponse != null) {
           UserModel().accessToken = loginResponse.token;
           localRepositoryInterface.saveToken(loginResponse.token);
           Get.offNamed(Routes.landingHome);
         } else {
-          localRepositoryInterface.clearAllData();
-          Get.offNamed(Routes.login);
+          Future.delayed(Duration(seconds: 3)).then((value) {
+            localRepositoryInterface.clearAllData();
+            Get.offNamed(Routes.login);
+          });
         }
       }
     } else {
-      Get.offNamed(Routes.login);
+      Future.delayed(Duration(seconds: 3)).then((value) {
+        Get.offNamed(Routes.login);
+      });
     }
   }
 }
