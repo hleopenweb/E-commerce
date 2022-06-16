@@ -63,8 +63,10 @@ class AccountScreen extends StatelessWidget {
                   ),
                   ListItemCart(
                     icon: Icons.location_city,
-                    title: 'Địa chỉ giao hàng',
-                    onpressed: () {},
+                    title: 'Đổi mật khẩu',
+                    onpressed: () {
+                      Get.toNamed(Routes.changePassword);
+                    },
                   ),
                   ListItemCart(
                     icon: Icons.settings,

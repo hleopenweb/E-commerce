@@ -231,7 +231,7 @@ class ProductDetailsController extends GetxController
             ),
           ),
           content: Text(
-            'Cảm ơn vi đã dành thời gian để chúng tôi hoàn thiện sản phẩm',
+            'Cảm ơn vì đã dành thời gian để chúng tôi hoàn thiện sản phẩm',
             style: GoogleFonts.beVietnam(
               fontSize: 14,
               fontWeight: FontWeight.w300,

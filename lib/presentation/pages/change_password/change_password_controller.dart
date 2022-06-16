@@ -14,52 +14,63 @@ class ChangePasswordController extends GetxController {
   final LocalRepositoryInterface localRepositoryInterface;
   final UserRepositoryInterface userRepositoryInterface;
 
-  final passwordTextController = TextEditingController();
+  final oldPasswordTextController = TextEditingController();
+  final reTypePasswordTextController = TextEditingController();
   final newPasswordTextController = TextEditingController();
 
   final isLoading = false.obs;
 
   final isValidPassword = false.obs;
-  final showPassword = true.obs;
+  final showNewPassword = true.obs;
+  final showOldPassword = true.obs;
+  final showRetypePassword = true.obs;
 
-  void toggleShowPassword() {
-    showPassword.toggle();
+  void toggleShowNewPassword() {
+    showNewPassword.toggle();
   }
 
-  // Future<bool> changePassword() async {
-    // final password = passwordTextController.text;
-    // try {
-    //   isLoading(true);
-    //   final loginResponse = await userRepositoryInterface.login(LoginRequest(userName, password));
-    //   if (loginResponse != null) {
-    //     final userService = await getUserInfo(loginResponse.id!);
-    //     if (userService != null) {
-    //       UserModel().create(
-    //         id: userService.id,
-    //         userName: userService.userName,
-    //         name: userService.name,
-    //         address: userService.address,
-    //         phoneNumber: userService.phoneNumber,
-    //         email: userService.email,
-    //         gender: userService.gender,
-    //         accessToken: loginResponse.token,
-    //         refreshToken: loginResponse.refreshToken,
-    //       );
-    //       await localRepositoryInterface.saveUser(UserModel());
-    //       isLoading(false);
-    //       return true;
-    //     } else {
-    //       isLoading(false);
-    //       return false;
-    //     }
-    //   } else {
-    //     isLoading(false);
-    //     return false;
-    //   }
-    // } on Exception {
-    //   isLoading(false);
-    //   return false;
-    // }
- // }
+  void toggleShowOldPassword() {
+    showOldPassword.toggle();
+  }
+
+  void toggleShowRetypePassword() {
+    showRetypePassword.toggle();
+  }
+
+// Future<bool> changePassword() async {
+// final password = passwordTextController.text;
+// try {
+//   isLoading(true);
+//   final loginResponse = await userRepositoryInterface.login(LoginRequest(userName, password));
+//   if (loginResponse != null) {
+//     final userService = await getUserInfo(loginResponse.id!);
+//     if (userService != null) {
+//       UserModel().create(
+//         id: userService.id,
+//         userName: userService.userName,
+//         name: userService.name,
+//         address: userService.address,
+//         phoneNumber: userService.phoneNumber,
+//         email: userService.email,
+//         gender: userService.gender,
+//         accessToken: loginResponse.token,
+//         refreshToken: loginResponse.refreshToken,
+//       );
+//       await localRepositoryInterface.saveUser(UserModel());
+//       isLoading(false);
+//       return true;
+//     } else {
+//       isLoading(false);
+//       return false;
+//     }
+//   } else {
+//     isLoading(false);
+//     return false;
+//   }
+// } on Exception {
+//   isLoading(false);
+//   return false;
+// }
+// }
 
 }

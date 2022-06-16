@@ -6,6 +6,8 @@ import 'package:sajilo_dokan/presentation/pages/Category/product/bindings/produc
 import 'package:sajilo_dokan/presentation/pages/Category/product/views/category_products.dart';
 import 'package:sajilo_dokan/presentation/pages/cart/cart_binding.dart';
 import 'package:sajilo_dokan/presentation/pages/cart/cart_screen.dart';
+import 'package:sajilo_dokan/presentation/pages/change_password/change_password_binding.dart';
+import 'package:sajilo_dokan/presentation/pages/change_password/change_password_screen.dart';
 import 'package:sajilo_dokan/presentation/pages/details/product_details_binding.dart';
 import 'package:sajilo_dokan/presentation/pages/details/product_details_screen.dart';
 import 'package:sajilo_dokan/presentation/pages/details/view/image_screen.dart';
@@ -52,6 +54,7 @@ class Routes {
   static const String paymentPaypal = '/paymentPaypal';
   static const String profile = '/profile';
   static const String orderHistory = '/orderHistory';
+  static const String changePassword = '/changePassword';
 }
 
 class SajiloDokanPages {
@@ -146,6 +149,11 @@ class SajiloDokanPages {
       name: Routes.orderHistory,
       page: () => OrderScreen(),
       binding: OrderBinding(),
+    ),
+    GetPage(
+      name: Routes.changePassword,
+      page: () => ChangePasswordScreen(),
+      binding: ChangePasswordBinding(),
     )
   ];
 }
