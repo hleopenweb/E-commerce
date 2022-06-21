@@ -19,10 +19,10 @@ class LoginScreen extends GetWidget<LoginController> {
 
   Future<void> register(BuildContext context) async {
     FocusManager.instance.primaryFocus?.unfocus();
-
     print('register call in screen');
     final result = await controller.register();
     if (result) {
+      controller.isSignIn.value = true;
       Get.offAllNamed(Routes.login);
       Get.snackbar('Đăng kí thành công', 'Vui lòng kiểm tra email để xác nhận',
           snackStyle: SnackStyle.FLOATING);

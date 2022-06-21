@@ -12,6 +12,7 @@ class ChangePasswordScreen extends GetWidget<ChangePasswordController> {
     FocusManager.instance.primaryFocus?.unfocus();
     final result = await controller.changePassword();
     if (result) {
+
       Get.find<HomeController>().logout();
       Get.offAllNamed(Routes.login);
       Get.snackbar('Đổi mật khẩu thành công', 'Vui lòng tiến hành đăng nhập bằng mật khẩu mới',

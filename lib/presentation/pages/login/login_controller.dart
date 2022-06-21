@@ -23,7 +23,7 @@ class LoginController extends GetxController {
   final passwordTextController = TextEditingController();
   final phoneNumberTextController = TextEditingController();
   final emailTextController = TextEditingController();
-  int gender = -1.obs;
+  final gender = 0.obs;
 
   final isLoading = false.obs;
 
@@ -104,7 +104,7 @@ class LoginController extends GetxController {
           password: password,
           phone: phone,
           userName: userName,
-          gender: gender,
+          gender: gender.value,
         ),
       );
       if (registerResponse != null) {

@@ -17,7 +17,6 @@ import 'package:sajilo_dokan/utils/convert_utils.dart';
 import '../../../../constant.dart';
 
 class SignForm extends StatelessWidget {
-
   SignForm(
       {this.name,
       this.email,
@@ -37,7 +36,6 @@ class SignForm extends StatelessWidget {
   final TextEditingController? userName;
   final TextEditingController? phone;
   final VoidCallback? logOrRegAction;
-
 
   final _formKey = GlobalKey<FormState>();
 
@@ -205,8 +203,7 @@ class SignForm extends StatelessWidget {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Số điện thoại không được bỏ trống';
-                            }
-                            else if(value.length <10){
+                            } else if (value.length < 10) {
                               return 'Số điện thoại phải đủ 10 số';
                             }
                             return null;
@@ -246,15 +243,22 @@ class SignForm extends StatelessWidget {
                               value: value,
                               child: Text(
                                 value,
-                                style: GoogleFonts.beVietnam(color: Colors.black),
+                                style:
+                                    GoogleFonts.beVietnam(color: Colors.black),
                               ),
                             );
                           }).toList(),
                           onChanged: (newValue) {
-                            switch(newValue){
-                              case 'Nam': controller.gender = 0;break;
-                              case 'Nữ' :controller.gender = 1;break;
-                              default: controller.gender = 2; break;
+                            switch (newValue) {
+                              case 'Nam':
+                                controller.gender.value = 0;
+                                break;
+                              case 'Nữ':
+                                controller.gender.value = 1;
+                                break;
+                              default:
+                                controller.gender.value = 2;
+                                break;
                             }
                           },
                         ),
@@ -269,8 +273,7 @@ class SignForm extends StatelessWidget {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Tên đăng nhập không được bỏ trống';
-                          }
-                          else if (hasWhiteSpace(value)) {
+                          } else if (hasWhiteSpace(value)) {
                             return 'Tên đăng nhập không được có khoảng trống';
                           }
                         },
@@ -343,16 +346,17 @@ class SignForm extends StatelessWidget {
               height: 20,
             ),
             InkWell(
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {
-                    logOrRegAction!();
-                  } else {
-                    create();
-                  }
-                },
-                child: DefaultBTN(
-                  btnText: btnText,
-                )),
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  logOrRegAction!();
+                } else {
+                  create();
+                }
+              },
+              child: DefaultBTN(
+                btnText: btnText,
+              ),
+            ),
             SizedBox(
               height: 30,
             ),
