@@ -7,7 +7,7 @@ import 'package:sajilo_dokan/presentation/widgets/loading_view.dart';
 
 class LoginScreen extends GetWidget<LoginController> {
   Future<void> login(BuildContext context) async {
-    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
     final result = await controller.login();
     if (result) {
       Get.offAllNamed(Routes.landingHome);
@@ -18,17 +18,20 @@ class LoginScreen extends GetWidget<LoginController> {
   }
 
   Future<void> register(BuildContext context) async {
-    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
+
     print('register call in screen');
     final result = await controller.register();
     if (result) {
-
       Get.offAllNamed(Routes.login);
       Get.snackbar('Đăng kí thành công', 'Vui lòng kiểm tra email để xác nhận',
           snackStyle: SnackStyle.FLOATING);
     } else {
-      Get.snackbar('Xảy ra lỗi', 'Vui lòng kiểm tra thông tin đăng kí',
-          snackStyle: SnackStyle.FLOATING);
+      Get.snackbar(
+        'Xảy ra lỗi',
+        'Vui lòng kiểm tra thông tin đăng kí',
+        snackStyle: SnackStyle.FLOATING,
+      );
     }
   }
 

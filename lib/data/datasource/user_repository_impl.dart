@@ -5,9 +5,11 @@ import 'package:sajilo_dokan/data/datasource/base_url.dart';
 import 'package:sajilo_dokan/domain/model/user_service.dart';
 import 'package:sajilo_dokan/domain/repository/user/user_repository.dart';
 import 'package:sajilo_dokan/domain/request/login_request.dart';
+import 'package:sajilo_dokan/domain/request/new_password_request.dart';
 import 'package:sajilo_dokan/domain/request/register_request.dart';
 import 'package:sajilo_dokan/domain/response/login_response.dart';
 import 'package:sajilo_dokan/domain/response/register_response.dart';
+import 'package:sajilo_dokan/domain/response/update_cart_response.dart';
 
 class UserRepositoryImpl extends UserRepositoryInterface with BaseData {
   @override
@@ -159,5 +161,31 @@ class UserRepositoryImpl extends UserRepositoryInterface with BaseData {
     } else {
       return null;
     }
+  }
+
+  @override
+  Future<UpdateCartResponse?> changePassword(NewPasswordRequest passwordRequest) async {
+    final result = await client.post(
+      getMainTestUrl(endpoint: '/api/password/edit', isQuery: false),
+      headers: headerWithoutAuth,
+      body: jsonEncode({
+        'email': passwordRequest.email,
+        'oldPassword': passwordRequest.oldPassword,
+        'password': passwordRequest.password,
+      }),
+    );
+    if (result.statusCode == 200) {
+      final jsonData = result.body;
+      print('change Password success');
+      return UpdateCartResponse.fromRawJson(jsonData);
+    } else if (result.statusCode == 401) {
+      if (await getNewAccessToken()) {
+        await changePassword(passwordRequest);
+      } else {
+        logOut();
+      }
+    }
+    return null;
+
   }
 }

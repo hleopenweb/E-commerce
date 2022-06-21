@@ -4,6 +4,7 @@ import 'package:sajilo_dokan/domain/request/add_order_request.dart';
 import 'package:sajilo_dokan/domain/request/cancel_order_request.dart';
 import 'package:sajilo_dokan/domain/request/comment_request.dart';
 import 'package:sajilo_dokan/domain/request/feedback_request.dart';
+import 'package:sajilo_dokan/domain/request/new_password_request.dart';
 import 'package:sajilo_dokan/domain/response/add_cart_response.dart';
 import 'package:sajilo_dokan/domain/response/cart_response.dart';
 import 'package:sajilo_dokan/domain/response/category.dart';

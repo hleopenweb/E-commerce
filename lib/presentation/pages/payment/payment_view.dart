@@ -87,7 +87,8 @@ class PaymentView extends GetView<PaymentController> {
                   ),
                 ),
                 onPressed: () {
-                  FocusScope.of(context).unfocus();
+                  FocusManager.instance.primaryFocus?.unfocus();
+
                   Get.toNamed(
                     Routes.paymentByCash,
                     arguments: [

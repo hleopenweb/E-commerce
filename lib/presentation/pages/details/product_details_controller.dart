@@ -359,7 +359,7 @@ class ProductDetailsController extends GetxController
   }
 
   Future<void> writeComment(BuildContext context) async {
-    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
     final comment = textEditingController.text;
     textEditingController.clear();
     try {
